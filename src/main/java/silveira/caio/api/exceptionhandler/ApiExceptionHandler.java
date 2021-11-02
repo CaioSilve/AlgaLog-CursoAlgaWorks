@@ -14,8 +14,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import silveira.caio.domain.exception.ServiceException;
 
 
 @ControllerAdvice
@@ -45,4 +48,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return super.handleExceptionInternal(ex, ec, headers, status, request);
 	}
+	
+	
+	@ExceptionHandler(ServiceException.class)
+	public ResponseEntity<Object> handleService(ServiceException ex, WebRequest request){
+		HttpStatus hs = HttpStatus.BAD_REQUEST;
+		
+		ExceptionComum ec = new ExceptionComum();
+		ec.setStatus(hs.value());
+		ec.setDataHora(LocalDateTime.now());
+		ec.setTitulo(ex.getMessage());
+		
+		return handleExceptionInternal(ex, ec, new HttpHeaders(), hs, request);
+	}
+	
 }
