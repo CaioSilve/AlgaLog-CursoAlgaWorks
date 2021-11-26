@@ -1,6 +1,6 @@
 package silveira.caio.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,7 +18,7 @@ import lombok.Setter;
 public class ExceptionComum {
 
 	private Integer status;
-	private LocalDateTime dataHora;
+	private OffsetDateTime dataHora;
 	private String titulo;
 	private List<Campo> campos;
 	

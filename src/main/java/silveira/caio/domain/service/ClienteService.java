@@ -14,6 +14,12 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository repo;
 	
+	
+	public Cliente getCliente(Long id) {
+		return repo.findById(id)
+				.orElseThrow(() -> new ServiceException("Cliente não encontrado"));
+	}
+	
 	@Transactional
 	public Cliente salvar(Cliente clie) {
 		boolean emailDuplicado = repo.findByEmail(clie.getEmail()).stream()

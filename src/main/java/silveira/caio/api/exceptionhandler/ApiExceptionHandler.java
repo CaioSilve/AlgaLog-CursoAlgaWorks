@@ -1,6 +1,6 @@
 package silveira.caio.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import silveira.caio.domain.exception.EntidadeNFException;
 import silveira.caio.domain.exception.ServiceException;
 
 
@@ -42,7 +43,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		ExceptionComum ec = new ExceptionComum();
 		ec.setStatus(status.value());
-		ec.setDataHora(LocalDateTime.now());
+		ec.setDataHora(OffsetDateTime.now());
 		ec.setTitulo("Campo(s) inválido(s)... Preencha corretamente e tente novamente");
 		ec.setCampos(campos);
 		
@@ -56,7 +57,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		ExceptionComum ec = new ExceptionComum();
 		ec.setStatus(hs.value());
-		ec.setDataHora(LocalDateTime.now());
+		ec.setDataHora(OffsetDateTime.now());
+		ec.setTitulo(ex.getMessage());
+		
+		return handleExceptionInternal(ex, ec, new HttpHeaders(), hs, request);
+	}
+	
+	@ExceptionHandler(EntidadeNFException.class)
+	public ResponseEntity<Object> handleService(EntidadeNFException ex, WebRequest request){
+		HttpStatus hs = HttpStatus.NOT_FOUND;
+		
+		ExceptionComum ec = new ExceptionComum();
+		ec.setStatus(hs.value());
+		ec.setDataHora(OffsetDateTime.now());
 		ec.setTitulo(ex.getMessage());
 		
 		return handleExceptionInternal(ex, ec, new HttpHeaders(), hs, request);
